@@ -74,8 +74,27 @@ function getDayName(date) {
  * Date('2024-02-13T00:00:00Z') => Date('2024-02-16T00:00:00Z')
  * Date('2024-02-16T00:00:00Z') => Date('2024-02-23T00:00:00Z')
  */
-function getNextFriday(/* date */) {
-  throw new Error('Not implemented');
+function getNextFriday(date) {
+  const curDay = date.getDay();
+  let daysToFri;
+  switch (curDay) {
+    case 5:
+      daysToFri = 7;
+      break;
+    case 0:
+    case 1:
+    case 2:
+    case 3:
+    case 4:
+      daysToFri = 5 - curDay;
+      break;
+    default:
+      daysToFri = 5 - curDay + 7;
+      break;
+  }
+  const nextFri = new Date(date);
+  nextFri.setDate(date.getDate() + daysToFri);
+  return nextFri;
 }
 
 /**
@@ -89,8 +108,8 @@ function getNextFriday(/* date */) {
  * 1, 2024 => 31
  * 2, 2024 => 29
  */
-function getCountDaysInMonth(/* month, year */) {
-  throw new Error('Not implemented');
+function getCountDaysInMonth(month, year) {
+  return new Date(year, month, 0).getDate();
 }
 
 /**
@@ -207,8 +226,15 @@ function getCountWeekendsInMonth(month, year) {
  * Date(2024, 0, 31) => 5
  * Date(2024, 1, 23) => 8
  */
-function getWeekNumberByDate(/* date */) {
-  throw new Error('Not implemented');
+function getWeekNumberByDate(date) {
+  const startOfYear = new Date(date.getFullYear(), 0, 1);
+  const startDate =
+    startOfYear.getDay() === 0
+      ? startOfYear
+      : new Date(date.getFullYear(), 0, 1 + (7 - startOfYear.getDay()));
+  const msPerWeek = 1000 * 60 * 60 * 24 * 7;
+  const msToDate = date.getTime() - startDate.getTime();
+  return Math.ceil(msToDate / msPerWeek) + 1;
 }
 
 /**
@@ -237,8 +263,18 @@ function getNextFridayThe13th(/* date */) {
  * Date(2024, 5, 1) => 2
  * Date(2024, 10, 10) => 4
  */
-function getQuarter(/* date */) {
-  throw new Error('Not implemented');
+function getQuarter(date) {
+  const month = date.getMonth();
+  switch (true) {
+    case month >= 0 && month <= 2:
+      return 1;
+    case month >= 3 && month <= 5:
+      return 2;
+    case month >= 6 && month <= 8:
+      return 3;
+    default:
+      return 4;
+  }
 }
 
 /**
